@@ -1,0 +1,45 @@
+[env]
+TARGET_DIR = "./target/aarch64-unknown-none-softfloat/debug"
+BINARY = "${TARGET_DIR}/raspos"
+IMAGE = "./target/raspos.img"
+
+[tasks.cargo_build]
+command = "cargo"
+args = ["build"]
+
+[tasks.objdump]
+command = "rust-objcopy"
+args = ["--strip-all", "-O", "binary", "${BINARY}", "${IMAGE}"]
+
+[tasks.binarycp]
+command = "cp"
+args = ["${BINARY}", "./target/raspos"]
+
+[tasks.docker_build]
+command = "docker"
+args = ["build", "--tag", "raspos", "."]
+dependencies = ["cargo_build", "objdump", "binarycp"]
+
+[tasks.build]
+dependencies = ["cargo_build", "docker_build"]
+
+[tasks.run]
+command = "docker"
+args = ["run", "--rm", "--name", "raspos", "raspos"]
+dependencies = ["build"]
+
+[tasks.nm]
+command = "docker"
+args = ["run", "--rm", "--name", "raspos", "raspos", "aarch64-none-elf-nm", "--demangle", "--print-size", "raspos"]
+dependencies = ["buil"]
+
+[tasks.cargo_clean]
+command = "cargo"
+args = ["clean"]
+
+[tasks.docker_clean]
+command = "docker"
+args = ["image", "rm", "raspos"]
+
+[tasks.clean]
+dependencies = ["cargo_clean", "docker_clean"]
