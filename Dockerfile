@@ -1,7 +1,6 @@
 FROM rustembedded/osdev-utils
 
 WORKDIR /code
-COPY ./target/raspos.img raspos.img
-COPY ./target/raspos raspos
+COPY ./target/kernel.img kernel.img
 
-CMD ["qemu-system-aarch64", "-M", "raspi3", "-d", "in_asm", "-display", "none", "-kernel", "raspos.img"]
+CMD ["qemu-system-aarch64", "-M", "raspi3", "-d", "in_asm", "-display", "none", "-kernel", "kernel.img"]
