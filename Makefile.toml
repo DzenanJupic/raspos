@@ -10,23 +10,11 @@ args = ["nm", "--release", "--", "--print-size", "--size-sort", "--demangle"]
 command = "cargo"
 args = ["objcopy", "--release", "--", "--strip-all", "-O", "binary", "./target/kernel.img"]
 
-[tasks.docker_build]
-command = "docker"
-args = ["build", "--tag", "raspos", "."]
+[tasks.qemu]
+command = "qemu-system-aarch64"
+args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "./target/kernel.img"]
 dependencies = ["kernel"]
 
-[tasks.docker]
-command = "docker"
-args = ["run", "--rm", "--name", "raspos", "raspos"]
-dependencies = ["build"]
-
-[tasks.cargo_clean]
+[tasks.clean]
 command = "cargo"
 args = ["clean"]
-
-[tasks.docker_stop]
-command = "docker"
-args = ["stop", "raspos"]
-
-[tasks.clean]
-dependencies = ["cargo_clean", "docker_stop"]
