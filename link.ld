@@ -1,7 +1,7 @@
 /* The address at which the the kernel binary will be loaded by the Raspberry's firmware */
-__rpi_load_addr = 0x80000;
+__RPI_LOAD_ADDR = 0x80000;
 
-ENTRY(__rpi_load_addr)
+ENTRY(__RPI_LOAD_ADDR)
 
 PHDRS
 {
@@ -11,8 +11,7 @@ PHDRS
 
 SECTIONS
 {
-    . =  __rpi_load_addr;
-    
+    . =  __RPI_LOAD_ADDR;
     __BOOT_STACK_END_EXCLUSIVE = .;
 
     .text :
