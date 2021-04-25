@@ -22,7 +22,7 @@ SECTIONS
         *(.text*)
     } :segment_rx
     
-    .rodata : ALIGN(8) { *(.ro-data*) } :segment_rx
+    .rodata : ALIGN(8) { *(.rodata*) } :segment_rx
 
     .got : ALIGN(8) { *(.got) } :segment_rx
     
