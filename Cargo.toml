@@ -5,3 +5,4 @@ edition = "2018"
 
 
 [dependencies]
+cortex-a = "5.1.6"
