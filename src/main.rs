@@ -15,7 +15,15 @@ pub mod kernel;
 
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-    println!("\n\nKernel {}", info);
+    print!("\n\n\nKernel panicked");
+
+    if let Some(location) = info.location() {
+        print!(" at {}", location)
+    }
+
+    if let Some(msg) = info.message() {
+        println!("\n\n{}", msg);
+    }
 
     lib::hold();
 }
