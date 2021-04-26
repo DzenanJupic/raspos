@@ -1,6 +1,10 @@
 use core::fmt;
 
-pub fn console() -> impl fmt::Write { QemuOutput }
+#[inline]
+pub fn console() -> &'static crate::lib::Mutex<impl fmt::Write> {
+    static CONSOLE: crate::lib::Mutex<QemuOutput> = crate::lib::Mutex::new(QemuOutput);
+    &CONSOLE
+}
 
 struct QemuOutput;
 
