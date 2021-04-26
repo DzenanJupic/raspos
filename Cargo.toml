@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 cortex-a = "5.1.6"
+lock_api = { version = "0.4.3", features = ["nightly"] }
