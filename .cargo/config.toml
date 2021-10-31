@@ -1,6 +1,8 @@
 [build]
 target = "aarch64-unknown-none-softfloat"
-rustflags = ["-C", "link-arg=-Tlink.ld"]
+
+[target.aarch64-unknown-none-softfloat]
+rustflags = ["-C", "link-arg=-Tsrc/_arch/aarch64/link.ld"]
 
 
 [profile.release]

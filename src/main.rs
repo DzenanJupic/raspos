@@ -1,12 +1,12 @@
-#![feature(naked_functions, asm, core_intrinsics, panic_info_message)]
+#![feature(naked_functions, asm, core_intrinsics, panic_info_message, global_asm)]
 #![cfg(target_arch = "aarch64")]
 
 #![no_std]
 #![no_main]
 
-#[path = "_arch/aarch64/boot.rs"]
+#[cfg_attr(target_arch = "aarch64", path = "_arch/aarch64/boot.rs")]
 mod boot;
-#[path = "_arch/aarch64/lib.rs"]
+#[cfg_attr(target_arch = "aarch64", path = "_arch/aarch64/lib.rs")]
 pub mod lib;
 
 #[macro_use]
@@ -22,8 +22,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
 
     if let Some(msg) = info.message() {
-        println!("\n\n{}", msg);
+        print!("\n\n{}", msg);
     }
 
-    lib::hold();
+    println!();
+
+    lib::wait_forever();
 }

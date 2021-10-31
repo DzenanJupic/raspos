@@ -1,4 +1,5 @@
 #[inline(never)]
 pub fn main() {
-    crate::lib::hold();
+    println!("Hello From Rust!");
+    panic!("This is the end");
 }

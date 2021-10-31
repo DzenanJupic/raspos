@@ -1,6 +1,6 @@
 use core::cell::UnsafeCell;
 
-use cortex_a::regs::RegisterReadOnly;
+use tock_registers::interfaces::Readable;
 
 /// The core that is responsible for booting
 const BOOT_CORE_ID: u64 = 0;
@@ -19,7 +19,7 @@ extern {
 pub unsafe extern "C" fn _start() -> ! {
     // The first thing we have to do is to setup the SP properly.
     // Theres the extern static __BOOT_STACK_END_EXCLUSIVE, that's
-    // defined in the linker script and tells us where the stack 
+    // defined in the linker script and tells us where the stack
     // ends.
     // After that we'll call the _boot function to handle the rest.
     asm!(
@@ -27,10 +27,12 @@ pub unsafe extern "C" fn _start() -> ! {
     "add  x0, x0, :lo12:{stack_addr}",
     "mov  sp, x0                    ",
     "b {boot}                       ",
+    "b {wait_forever}               ",
     stack_addr = sym __BOOT_STACK_END_EXCLUSIVE,
     boot = sym _boot,
+    wait_forever = sym crate::lib::wait_forever,
     options(noreturn),
-    );
+    )
 }
 
 #[no_mangle]
@@ -43,17 +45,17 @@ unsafe extern "C" fn _boot() -> ! {
     // that is supposed to boot.
     check_core_is_boot_core();
 
-    // We should initialized .bss (uninitialized 
+    // We should initialized .bss (uninitialized
     // statics) to 0.
-    // SAFETY: 
-    //  We just checked, that we are the unique 
+    // SAFETY:
+    //  We just checked, that we are the unique
     //  boot core.
     zero_bss();
 
     crate::kernel::main();
 
     // The kernel should never return, because there's nothing
-    // to do when the operating system is done. 
+    // to do when the operating system is done.
     panic!("The kernel returned");
 }
 
@@ -61,17 +63,17 @@ unsafe extern "C" fn _boot() -> ! {
 /// Checks if the current core is the boot core and never returns, if not.
 #[inline(always)]
 fn check_core_is_boot_core() {
-    let core_id = cortex_a::regs::MPIDR_EL1.get() & CORE_ID_MASK;
+    let core_id = cortex_a::registers::MPIDR_EL1.get() & CORE_ID_MASK;
 
     if core_id != BOOT_CORE_ID {
-        crate::lib::hold();
+        crate::lib::wait_forever();
     }
 }
 
 /// Zeros out the .bss section
-/// 
+///
 /// SAFETY:
-/// Only one core may call this function at a time. 
+/// Only one core may call this function at a time.
 #[inline(always)]
 unsafe fn zero_bss() {
     let start = __BSS_START.get();

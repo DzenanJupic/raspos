@@ -5,8 +5,8 @@ mod mutex;
 
 pub type Mutex<T> = lock_api::Mutex<mutex::RawMutex, T>;
 
-#[inline(always)]
-pub fn hold() -> ! {
+#[inline(never)]
+pub fn wait_forever() -> ! {
     loop {
         cortex_a::asm::wfe();
     }

@@ -1,6 +1,8 @@
 [tasks.asm]
-command = "cargo"
-args = ["objdump", "--release", "--", "-Cdtlg", "--section-headers"]
+command = "rust-objdump"
+install_crate = { crate_name = "cargo-binutils", binary = "rust-objdump", test_arg = "--help" }
+args = ["-Cdtlg", "--section-headers", "target/${CARGO_MAKE_CRATE_TARGET_TRIPLE}/release/kernel"]
+dependencies = ["build-release"]
 
 [tasks.nm]
 command = "cargo"
