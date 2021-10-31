@@ -22,7 +22,7 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
 
     if let Some(msg) = info.message() {
-        print!("\n\n{}", msg);
+        print!(":\n{}", msg);
     }
 
     println!();
