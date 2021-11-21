@@ -19,6 +19,9 @@ pub fn wait_forever() -> ! {
 
 #[inline]
 pub fn console() -> &'static crate::sync::Mutex<impl core::fmt::Write> {
-    static CONSOLE: crate::sync::Mutex<imp::Console> = crate::sync::Mutex::new(imp::Console::new());
-    &CONSOLE
+    use crate::sync::Mutex;
+    use lazy_static::lazy::Lazy;
+
+    static CONSOLE: Lazy<Mutex<imp::Console>> = Lazy::INIT;
+    CONSOLE.get(|| Mutex::new(imp::Console::new()))
 }
