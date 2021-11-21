@@ -11,17 +11,6 @@ pub mod sync;
 
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-    print!("\n\n\nKernel panicked");
-
-    if let Some(location) = info.location() {
-        print!(" at {}", location)
-    }
-
-    if let Some(msg) = info.message() {
-        print!(":\n{}", msg);
-    }
-
-    println!();
-
+    println!("\n\n\nKernel {}", info);
     arch::wait_forever()
 }
