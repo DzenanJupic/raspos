@@ -1,21 +1,57 @@
+[env]
+RUST_BACKTRACE = "full"
+
+PROFILE = { source = "${CARGO_MAKE_PROFILE}", mapping = { "development" = "debug", "production" = "release" } }
+TARGET_DIR = "target/${CARGO_MAKE_CRATE_TARGET_TRIPLE}/${PROFILE}"
+DEBUG_DIR = "target/${CARGO_MAKE_CRATE_TARGET_TRIPLE}/debug"
+RELEASE_DIR = "target/${CARGO_MAKE_CRATE_TARGET_TRIPLE}/release"
+
+KERNEL_FILE = "${TARGET_DIR}/kernel"
+KERNEL_DEBUG_FILE = "${DEBUG_DIR}/kernel"
+KERNEL_RELEASE_FILE = "${RELEASE_DIR}/kernel"
+
+
 [tasks.asm]
 command = "rust-objdump"
 install_crate = { crate_name = "cargo-binutils", binary = "rust-objdump", test_arg = "--help" }
-args = ["-Cdtlg", "--section-headers", "target/${CARGO_MAKE_CRATE_TARGET_TRIPLE}/release/kernel"]
+args = ["-Cdtlg", "--section-headers", "${KERNEL_RELEASE_FILE}"]
 dependencies = ["build-release"]
 
 [tasks.nm]
-command = "cargo"
-args = ["nm", "--release", "--", "--print-size", "--size-sort", "--demangle"]
+command = "rust-nm"
+install_crate = { crate_name = "cargo-binutils", binary = "rust-nm", test_arg = "--help" }
+args = ["--print-size", "--size-sort", "--demangle", "${KERNEL_RELEASE_FILE}"]
+dependencies = ["build-release"]
 
 [tasks.kernel]
+run_task = [
+    { name = "kernel-aarch64", condition = { env = { "CARGO_MAKE_RUST_TARGET_ARCH" = "aarch64" } } },
+    { name = "kernel-x86_64", condition = { env = { "CARGO_MAKE_RUST_TARGET_ARCH" = "x86_64" } } },
+]
+
+[tasks.kernel-aarch64]
 command = "cargo"
 args = ["objcopy", "--release", "--", "--strip-all", "-O", "binary", "./target/kernel8.img"]
 
+[tasks.kernel-x86_64]
+command = "cargo"
+install_crate = { crate_name = "bootimage", binary = "cargo", test_arg = "--help" }
+args = ["bootimage"]
+
 [tasks.qemu]
+run_task = [
+    { name = "qemu-aarch64", condition = { env = { "CARGO_MAKE_RUST_TARGET_ARCH" = "aarch64" } } },
+    { name = "qemu-x86_64", condition = { env = { "CARGO_MAKE_RUST_TARGET_ARCH" = "x86_64" } } },
+]
+dependencies = ["kernel"]
+
+[tasks.qemu-aarch64]
 command = "qemu-system-aarch64"
 args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "./target/kernel8.img"]
-dependencies = ["kernel"]
+
+[tasks.qemu-x86_64]
+command = "qemu-system-x86_64"
+args = ["-drive", "format=raw,file=target/x86_64-unknown-none/${PROFILE}/bootimage-kernel.bin"]
 
 [tasks.clean]
 command = "cargo"
