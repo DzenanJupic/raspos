@@ -2,7 +2,7 @@ use core::fmt::{self, Write};
 
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
-    crate::lib::console()
+    crate::arch::console()
         .lock()
         .write_fmt(args)
         .expect("Failed to write to the hardware console");

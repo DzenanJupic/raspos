@@ -10,11 +10,11 @@ args = ["nm", "--release", "--", "--print-size", "--size-sort", "--demangle"]
 
 [tasks.kernel]
 command = "cargo"
-args = ["objcopy", "--release", "--", "--strip-all", "-O", "binary", "./target/kernel.img"]
+args = ["objcopy", "--release", "--", "--strip-all", "-O", "binary", "./target/kernel8.img"]
 
 [tasks.qemu]
 command = "qemu-system-aarch64"
-args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "./target/kernel.img"]
+args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "./target/kernel8.img"]
 dependencies = ["kernel"]
 
 [tasks.clean]

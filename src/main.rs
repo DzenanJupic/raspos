@@ -1,17 +1,13 @@
-#![feature(naked_functions, asm, core_intrinsics, panic_info_message, global_asm)]
-#![cfg(target_arch = "aarch64")]
+#![feature(naked_functions, asm, core_intrinsics, panic_info_message, global_asm, asm_sym)]
 
 #![no_std]
 #![no_main]
 
-#[cfg_attr(target_arch = "aarch64", path = "_arch/aarch64/boot.rs")]
-mod boot;
-#[cfg_attr(target_arch = "aarch64", path = "_arch/aarch64/lib.rs")]
-pub mod lib;
-
+pub mod arch;
 #[macro_use]
 pub mod print;
 pub mod kernel;
+pub mod sync;
 
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
@@ -27,5 +23,5 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
 
     println!();
 
-    lib::wait_forever();
+    arch::wait_forever()
 }

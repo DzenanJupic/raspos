@@ -1,14 +1,14 @@
 use core::fmt;
 
-#[inline]
-pub fn console() -> &'static crate::lib::Mutex<impl fmt::Write> {
-    static CONSOLE: crate::lib::Mutex<QemuOutput> = crate::lib::Mutex::new(QemuOutput);
-    &CONSOLE
+pub struct Console;
+
+impl Console {
+    pub const fn new() -> Self {
+        Self
+    }
 }
 
-struct QemuOutput;
-
-impl fmt::Write for QemuOutput {
+impl fmt::Write for Console {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         for b in s.bytes() {
             unsafe {

@@ -1,5 +1,4 @@
 use core::cell::UnsafeCell;
-
 use tock_registers::interfaces::Readable;
 
 /// The core that is responsible for booting
@@ -30,7 +29,7 @@ pub unsafe extern "C" fn _start() -> ! {
     "b {wait_forever}               ",
     stack_addr = sym __BOOT_STACK_END_EXCLUSIVE,
     boot = sym _boot,
-    wait_forever = sym crate::lib::wait_forever,
+    wait_forever = sym crate::arch::wait_forever,
     options(noreturn),
     )
 }
@@ -66,7 +65,7 @@ fn check_core_is_boot_core() {
     let core_id = cortex_a::registers::MPIDR_EL1.get() & CORE_ID_MASK;
 
     if core_id != BOOT_CORE_ID {
-        crate::lib::wait_forever();
+        crate::arch::wait_forever();
     }
 }
 
