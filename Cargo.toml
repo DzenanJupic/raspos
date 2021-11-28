@@ -12,6 +12,7 @@ name = "kernel"
 path = "src/main.rs"
 
 [dependencies]
+cfg-if = "1.0.0"
 log = "0.4.14"
 lock_api = { version = "0.4.5", features = ["nightly"] }
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
@@ -23,10 +24,10 @@ cortex-a = "6.1.0"
 [target.'cfg(target_arch = "x86_64")'.dependencies]
 bootloader = "0.9"
 x86_64 = "0.14.6"
-uart_16550 = "0.2.15"
+uart_16550 = { version = "0.2.15", optional = true }
 
 [features]
 # os runs in qemu
-qemu = []
+qemu = ["uart_16550"]
 
 # profiles are configured in .cargo/config.toml

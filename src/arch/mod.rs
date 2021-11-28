@@ -1,3 +1,4 @@
+#![cfg_attr(feature = "qemu", allow(dead_code))]
 #[cfg(not(any(
 target_arch = "aarch64",
 target_arch = "x86_64",
@@ -23,13 +24,20 @@ pub fn wait_forever() -> ! {
 #[repr(usize)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ExitCode {
-    Success = imp::SUCCESS_EXIT_CODE,
-    Failed = imp::FAILURE_EXIT_CODE,
+    Success = 0x10,
+    Failed = 0x11,
 }
 
 #[inline(never)]
 pub fn shut_down(exit_code: ExitCode) -> ! {
-    imp::shut_down(exit_code);
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "qemu")] {
+            qemu::shut_down(exit_code);
+        } else {
+            imp::shut_down(exit_code);
+        }
+    }
+
     panic!("failed to shut down device");
 }
 
