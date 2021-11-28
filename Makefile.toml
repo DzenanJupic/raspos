@@ -55,6 +55,10 @@ args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "${TA
 command = "qemu-system-x86_64"
 args = ["-drive", "format=raw,file=target/x86_64-unknown-none/${PROFILE}/bootimage-kernel.bin"]
 
+[tasks.test]
+command = "cargo"
+args = ["test", "--features", "qemu"]
+
 [tasks.clean]
 command = "cargo"
 args = ["clean"]
