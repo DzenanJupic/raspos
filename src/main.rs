@@ -6,7 +6,7 @@ custom_test_frameworks,
 #![no_std]
 #![no_main]
 
-#![test_runner(crate::test_runner)]
+#![test_runner(crate::test_runner::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 pub mod arch;
@@ -22,7 +22,21 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
 }
 
 #[cfg(test)]
-fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
-    for test in tests { test(); }
+mod test_runner {
+    pub trait Test {
+        fn run(&self);
+    }
+
+    impl<F: Fn()> Test for F {
+        fn run(&self) {
+            print!("{} ...", core::any::type_name::<F>());
+            self();
+            println!(" ok");
+        }
+    }
+
+    pub fn test_runner(tests: &[&dyn Test]) {
+        println!("Running {} tests", tests.len());
+        for test in tests { test.run(); }
+    }
 }
