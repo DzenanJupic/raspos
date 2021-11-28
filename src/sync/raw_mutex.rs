@@ -8,6 +8,7 @@ const UNLOCKED: bool = false;
 pub struct RawMutex(AtomicBool);
 
 unsafe impl lock_api::RawMutex for RawMutex {
+    #[allow(clippy::declare_interior_mutable_const)]
     const INIT: Self = Self(AtomicBool::new(false));
 
     type GuardMarker = GuardSend;
