@@ -3,6 +3,11 @@
 /// When the kernel returns, the caller may shutdown the system.
 #[inline(never)]
 pub fn main() {
+    if cfg!(test) {
+        crate::test_main();
+        return;
+    }
+
     println!("Hello From Rust!");
     panic!("This is the end");
 }
