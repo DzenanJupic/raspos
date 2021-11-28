@@ -52,10 +52,6 @@ unsafe extern "C" fn _boot() -> ! {
     zero_bss();
 
     crate::kernel::main();
-
-    // The kernel should never return, because there's nothing
-    // to do when the operating system is done.
-    panic!("The kernel returned");
 }
 
 

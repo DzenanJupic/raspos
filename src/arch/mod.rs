@@ -17,6 +17,19 @@ pub fn wait_forever() -> ! {
     imp::wait_forever()
 }
 
+#[repr(usize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ExitCode {
+    Success = imp::SUCCESS_EXIT_CODE,
+    Failed = imp::FAILURE_EXIT_CODE,
+}
+
+#[inline(never)]
+pub fn shut_down(exit_code: ExitCode) -> ! {
+    imp::shut_down(exit_code);
+    panic!("failed to shut down device");
+}
+
 #[inline]
 pub fn console() -> &'static crate::sync::Mutex<impl core::fmt::Write> {
     use crate::sync::Mutex;
