@@ -30,8 +30,10 @@ run_task = [
 ]
 
 [tasks.kernel-aarch64]
-command = "cargo"
-args = ["objcopy", "--release", "--", "--strip-all", "-O", "binary", "./target/kernel8.img"]
+command = "rust-objcopy"
+install_crate = { crate_name = "cargo-binutils", binary = "rust-objcopy", test_arg = "--help" }
+args = ["--strip-all", "-O", "binary", "${TARGET_DIR}/kernel", "${TARGET_DIR}/kernel8.img"]
+dependencies = ["build-release"]
 
 [tasks.kernel-x86_64]
 command = "cargo"
@@ -47,7 +49,7 @@ dependencies = ["kernel"]
 
 [tasks.qemu-aarch64]
 command = "qemu-system-aarch64"
-args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "./target/kernel8.img"]
+args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "${TARGET_DIR}/kernel8.img"]
 
 [tasks.qemu-x86_64]
 command = "qemu-system-x86_64"
