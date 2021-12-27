@@ -1,4 +1,5 @@
 #![no_std]
+#![feature(abi_x86_interrupt)]
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
 mod compile_time_checks;
@@ -13,6 +14,11 @@ pub mod qemu;
 #[inline(never)]
 pub fn wait_forever() -> ! {
     imp::wait_forever()
+}
+
+/// Initialize the interrupt descriptor table
+pub fn init_idt() {
+    imp::init_idt();
 }
 
 #[repr(usize)]
