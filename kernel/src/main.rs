@@ -22,9 +22,7 @@ pub extern "C" fn kernel_main() -> ! {
 }
 
 pub fn main() {
-    kernel::init_logger();
-    arch::init_idt();
-
+    kernel::init();
 
     println!("Hello From Rust!");
     serial_println!("Hello Qemu!");
