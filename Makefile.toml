@@ -10,6 +10,8 @@ KERNEL_FILE = "${TARGET_DIR}/kernel"
 KERNEL_DEBUG_FILE = "${DEBUG_DIR}/kernel"
 KERNEL_RELEASE_FILE = "${RELEASE_DIR}/kernel"
 
+[config]
+default_to_workspace = false
 
 [tasks.asm]
 command = "rust-objdump"
@@ -53,7 +55,7 @@ args = ["-M", "raspi3", "-serial", "stdio", "-display", "none", "-kernel", "${TA
 
 [tasks.qemu-x86_64]
 command = "qemu-system-x86_64"
-args = ["-drive", "format=raw,file=target/x86_64-unknown-none/${PROFILE}/bootimage-kernel.bin"]
+args = ["-drive", "format=raw,file=target/x86_64-unknown-none/${PROFILE}/bootimage-kernel.bin", "-serial", "stdio"]
 
 [tasks.test]
 command = "cargo"

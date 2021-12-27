@@ -5,8 +5,10 @@ use uart_16550::SerialPort;
 pub struct SerialConsole(SerialPort);
 
 impl SerialConsole {
-    pub fn new() -> Self {
-        let mut serial_port = unsafe { SerialPort::new(0x3f8) };
+    /// SAFETY:
+    ///     This function may only be called once.
+    pub unsafe fn new() -> Self {
+        let mut serial_port = SerialPort::new(0x3f8);
         serial_port.init();
         Self(serial_port)
     }
