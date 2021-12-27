@@ -1,17 +1,17 @@
 use core::fmt::{self, Write};
 
+use crate::lazy::Lazy;
 use crate::sync::Mutex;
 
 #[doc(hidden)]
 pub fn console() -> &'static Mutex<impl Write> {
-    use lazy_static::lazy::Lazy;
-
-    static CONSOLE: Lazy<Mutex<arch::Console>> = Lazy::INIT;
-    CONSOLE.get(|| {
+    static CONSOLE: Lazy<Mutex<arch::Console>> = Lazy::new(|| {
         // SAFETY: this will only be called once
         let console = unsafe { arch::Console::new() };
         Mutex::new(console)
-    })
+    });
+
+    &CONSOLE
 }
 
 #[doc(hidden)]
@@ -37,14 +37,13 @@ macro_rules! println {
 #[doc(hidden)]
 #[cfg(feature = "qemu")]
 pub fn serial_console() -> &'static Mutex<impl Write> {
-    use lazy_static::lazy::Lazy;
-
-    static CONSOLE: Lazy<Mutex<arch::qemu::Console>> = Lazy::INIT;
-    CONSOLE.get(|| {
+    static CONSOLE: Lazy<Mutex<arch::qemu::Console>> = Lazy::new(|| {
         // SAFETY: this will only be called once
         let console = unsafe { arch::qemu::Console::new() };
         Mutex::new(console)
-    })
+    });
+
+    &CONSOLE
 }
 
 #[doc(hidden)]
