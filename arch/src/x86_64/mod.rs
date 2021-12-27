@@ -1,3 +1,8 @@
+pub use x86_64::instructions::interrupts::{
+    are_enabled as interrupts_are_enabled,
+    disable as disable_interrupts,
+    enable as enable_interrupts,
+};
 use x86_64::instructions::segmentation::Segment;
 
 pub use console::Console;

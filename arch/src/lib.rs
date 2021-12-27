@@ -16,6 +16,26 @@ pub fn wait_forever() -> ! {
     imp::wait_forever()
 }
 
+pub fn enable_interrupts() {
+    imp::enable_interrupts();
+}
+
+pub fn disable_interrupts() {
+    imp::disable_interrupts();
+}
+
+pub fn interrupts_are_enabled() -> bool {
+    imp::interrupts_are_enabled()
+}
+
+pub fn without_interrupts<T, F: FnOnce() -> T>(f: F) -> T {
+    let enabled = interrupts_are_enabled();
+    if enabled { disable_interrupts() }
+    let ret = f();
+    if enabled { enable_interrupts() }
+    ret
+}
+
 pub fn init() {
     imp::init();
 }
