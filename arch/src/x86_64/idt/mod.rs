@@ -21,6 +21,7 @@ pub static IDT: Lazy<InterruptDescriptorTable> = Lazy::new(|| {
 
     // hardware interrupts
     idt[Interrupt::Timer as usize].set_handler_fn(hardware_interrupts::timer_handler);
+    idt[Interrupt::KeyBoard as usize].set_handler_fn(hardware_interrupts::keyboard_handler);
 
     idt
 });
