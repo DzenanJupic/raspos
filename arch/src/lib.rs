@@ -16,9 +16,8 @@ pub fn wait_forever() -> ! {
     imp::wait_forever()
 }
 
-/// Initialize the interrupt descriptor table
-pub fn init_idt() {
-    imp::init_idt();
+pub fn init() {
+    imp::init();
 }
 
 #[repr(usize)]

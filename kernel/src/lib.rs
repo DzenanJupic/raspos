@@ -13,7 +13,7 @@ pub mod print;
 mod logger;
 
 pub fn init() {
-    arch::init_idt();
+    arch::init();
 }
 
 pub mod tests {

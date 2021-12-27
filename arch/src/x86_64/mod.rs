@@ -1,27 +1,26 @@
+use x86_64::instructions::segmentation::Segment;
+
 pub use console::Console;
 
 mod console;
-mod interrupts;
+mod gdt;
+mod idt;
 
 pub fn wait_forever() -> ! {
     #[allow(clippy::empty_loop)]
     loop {}
 }
 
-pub fn init_idt() {
-    use x86_64::structures::idt::InterruptDescriptorTable;
-    use libcore::lazy::Lazy;
+pub fn init() {
+    // initialize the global descriptor table
+    gdt::GDT.0.load();
+    unsafe {
+        x86_64::instructions::segmentation::CS::set_reg(gdt::GDT.1.code_selector);
+        x86_64::instructions::tables::load_tss(gdt::GDT.1.tss_selector);
+    }
 
-    static IDT: Lazy<InterruptDescriptorTable> = Lazy::new(|| {
-        let mut idt = InterruptDescriptorTable::new();
-
-        idt.breakpoint.set_handler_fn(interrupts::breakpoint_handler);
-        idt.double_fault.set_handler_fn(interrupts::double_fault_handler);
-
-        idt
-    });
-
-    IDT.load();
+    // initialize the interrupt descriptor table
+    idt::IDT.load();
 }
 
 pub fn shut_down(_: super::ExitCode) {
