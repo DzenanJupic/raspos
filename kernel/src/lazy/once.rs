@@ -75,6 +75,7 @@ impl<T> Once<T> {
     /// The state has to be COMPLETE
     #[inline]
     pub unsafe fn get_unchecked(&self) -> &T {
+        debug_assert!(self.is_initialized());
         (&*self.value.get()).assume_init_ref()
     }
 
@@ -82,6 +83,7 @@ impl<T> Once<T> {
     /// The state has to be COMPLETE
     #[inline]
     pub unsafe fn get_unchecked_mut(&mut self) -> &mut T {
+        debug_assert!(self.is_initialized());
         (&mut *self.value.get()).assume_init_mut()
     }
 
@@ -89,6 +91,7 @@ impl<T> Once<T> {
     /// The state has to be set from INCOMPLETE to RUNNING by the the caller
     #[inline]
     pub unsafe fn set_unchecked(&self, value: T) {
+        debug_assert_eq!(self.state.load(Ordering::Acquire), RUNNING);
         (&mut *self.value.get()).write(value);
         self.state.store(COMPLETE, Ordering::Release);
     }
