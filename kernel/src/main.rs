@@ -31,5 +31,6 @@ pub fn main() {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     println!("\n\n\nKernel {}", info);
+    serial_println!("\n\n\nKernel {}", info);
     arch::wait_forever()
 }
