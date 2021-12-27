@@ -22,6 +22,7 @@ pub extern "C" fn kernel_main() -> ! {
 }
 
 pub fn main() {
+    kernel::init_logger();
     kernel::init();
 
     println!("Hello From Rust!");

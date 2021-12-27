@@ -6,12 +6,13 @@
 
 extern crate boot;
 
+pub use logger::init_logger;
+
 #[macro_use]
 pub mod print;
 mod logger;
 
 pub fn init() {
-    logger::init_logger();
     arch::init_idt();
 }
 
