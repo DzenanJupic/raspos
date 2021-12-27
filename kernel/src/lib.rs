@@ -11,6 +11,7 @@ pub use logger::init_logger;
 #[macro_use]
 pub mod print;
 
+pub mod lazy;
 mod logger;
 pub mod sync;
 
