@@ -16,10 +16,12 @@ pub fn console() -> &'static Mutex<impl Write> {
 
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
-    console()
-        .lock()
-        .write_fmt(args)
-        .expect("Failed to write to the hardware console");
+    arch::without_interrupts(|| {
+        console()
+            .lock()
+            .write_fmt(args)
+            .expect("Failed to write to the hardware console");
+    })
 }
 
 #[macro_export]
@@ -49,10 +51,12 @@ pub fn serial_console() -> &'static Mutex<impl Write> {
 #[doc(hidden)]
 #[cfg(feature = "qemu")]
 pub fn _serial_print(args: fmt::Arguments) {
-    serial_console()
-        .lock()
-        .write_fmt(args)
-        .expect("Failed to write to serial port console")
+    arch::without_interrupts(|| {
+        serial_console()
+            .lock()
+            .write_fmt(args)
+            .expect("Failed to write to serial port console")
+    })
 }
 
 #[macro_export]
