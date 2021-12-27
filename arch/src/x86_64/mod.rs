@@ -12,8 +12,9 @@ mod gdt;
 mod idt;
 
 pub fn wait_forever() -> ! {
-    #[allow(clippy::empty_loop)]
-    loop {}
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 pub fn init() {
@@ -33,5 +34,5 @@ pub fn init() {
 }
 
 pub fn shut_down(_: super::ExitCode) {
-    wait_forever();
+    super::wait_forever();
 }
