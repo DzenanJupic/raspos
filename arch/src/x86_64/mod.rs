@@ -21,6 +21,10 @@ pub fn init() {
 
     // initialize the interrupt descriptor table
     idt::IDT.load();
+
+    // initialize hardware interrupts (intel PIC8259)
+    unsafe { idt::PICS.lock().initialize(); }
+    x86_64::instructions::interrupts::enable();
 }
 
 pub fn shut_down(_: super::ExitCode) {

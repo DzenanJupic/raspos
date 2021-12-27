@@ -13,6 +13,7 @@ tock-registers = "0.7.0"
 [target.'cfg(target_arch = "x86_64")'.dependencies]
 uart_16550 = { version = "0.2.15", optional = true }
 x86_64 = { version = "0.14.7" }
+pic8259 = "0.10.2"
 
 [features]
 qemu = ["uart_16550"]

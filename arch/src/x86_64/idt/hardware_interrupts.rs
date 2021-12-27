@@ -1,0 +1,22 @@
+use pic8259::ChainedPics;
+use x86_64::structures::idt::InterruptStackFrame;
+
+use libcore::sync::Mutex;
+
+pub const PIC_1_OFFSET: u8 = 32;
+pub const PIC_2_OFFSET: u8 = PIC_1_OFFSET + 8;
+
+pub static PICS: Mutex<ChainedPics> = Mutex::new(unsafe {
+    ChainedPics::new(PIC_1_OFFSET, PIC_2_OFFSET)
+});
+
+#[repr(u8)]
+#[derive(Clone, Copy, Debug)]
+pub enum Interrupt {
+    Timer = PIC_1_OFFSET
+}
+
+pub extern "x86-interrupt" fn timer_handler(_: InterruptStackFrame) {
+    log::info!(".");
+    unsafe { PICS.lock().notify_end_of_interrupt(Interrupt::Timer as u8); }
+}
