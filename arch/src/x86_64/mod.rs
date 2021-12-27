@@ -16,6 +16,7 @@ pub fn init_idt() {
         let mut idt = InterruptDescriptorTable::new();
 
         idt.breakpoint.set_handler_fn(interrupts::breakpoint_handler);
+        idt.double_fault.set_handler_fn(interrupts::double_fault_handler);
 
         idt
     });
