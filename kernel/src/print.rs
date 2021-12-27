@@ -1,7 +1,7 @@
 use core::fmt::{self, Write};
 
-use crate::lazy::Lazy;
-use crate::sync::Mutex;
+use libcore::lazy::Lazy;
+use libcore::sync::Mutex;
 
 #[doc(hidden)]
 pub fn console() -> &'static Mutex<impl Write> {

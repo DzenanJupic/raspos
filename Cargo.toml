@@ -1,5 +1,5 @@
 [workspace]
-members = ["arch", "boot", "kernel"]
+members = ["libcore", "arch", "boot", "kernel"]
 default-members = ["kernel"]
 
 # profiles are configured in .cargo/config.toml
