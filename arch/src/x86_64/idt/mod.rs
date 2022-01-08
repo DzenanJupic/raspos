@@ -18,6 +18,7 @@ pub static IDT: Lazy<InterruptDescriptorTable> = Lazy::new(|| {
             .set_handler_fn(exceptions::double_fault_handler)
             .set_stack_index(super::gdt::DOUBLE_FAULT_IST_INDEX);
     }
+    idt.page_fault.set_handler_fn(exceptions::page_fault_handler);
 
     // hardware interrupts
     idt[Interrupt::Timer as usize].set_handler_fn(hardware_interrupts::timer_handler);
