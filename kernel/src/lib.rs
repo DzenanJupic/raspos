@@ -4,17 +4,11 @@
 #![test_runner(crate::tests::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-extern crate boot;
-
 pub use logger::init_logger;
 
 #[macro_use]
 pub mod print;
 mod logger;
-
-pub fn init() {
-    arch::init();
-}
 
 pub mod tests {
     #[cfg(all(test, not(feature = "qemu")))]
@@ -26,7 +20,6 @@ pub mod tests {
             #[cfg(test)]
             #[no_mangle]
             pub extern "C" fn kernel_main() -> ! {
-                $crate::init();
                 $test_main();
                 ::arch::shut_down(arch::ExitCode::Success);
             }

@@ -7,17 +7,12 @@ use x86_64::instructions::segmentation::Segment;
 
 pub use console::Console;
 
+mod boot;
 mod console;
 mod gdt;
 mod idt;
 
-pub fn wait_forever() -> ! {
-    loop {
-        x86_64::instructions::hlt();
-    }
-}
-
-pub fn init() {
+fn init() {
     // initialize the global descriptor table
     gdt::GDT.0.load();
     unsafe {
@@ -31,6 +26,12 @@ pub fn init() {
     // initialize hardware interrupts (intel PIC8259)
     unsafe { idt::PICS.lock().initialize(); }
     x86_64::instructions::interrupts::enable();
+}
+
+pub fn wait_forever() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 pub fn shut_down(_: super::ExitCode) {

@@ -17,7 +17,6 @@ path = "src/main.rs"
 
 [dependencies]
 arch = { path = "../arch" }
-boot = { path = "../boot" }
 libcore = { path = "../libcore" }
 log = "0.4.14"
 

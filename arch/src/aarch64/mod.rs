@@ -1,5 +1,6 @@
 pub use console::Console;
 
+mod boot;
 mod console;
 
 pub fn wait_forever() -> ! {

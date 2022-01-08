@@ -2,6 +2,11 @@
 #![feature(abi_x86_interrupt)]
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
+extern "C" {
+    /// The entry function into the arch-independent kernel.
+    fn kernel_main() -> !;
+}
+
 mod compile_time_checks;
 
 #[cfg_attr(target_arch = "aarch64", path = "aarch64/mod.rs")]
@@ -34,10 +39,6 @@ pub fn without_interrupts<T, F: FnOnce() -> T>(f: F) -> T {
     let ret = f();
     if enabled { enable_interrupts() }
     ret
-}
-
-pub fn init() {
-    imp::init();
 }
 
 #[repr(usize)]

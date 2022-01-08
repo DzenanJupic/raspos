@@ -8,7 +8,6 @@ custom_test_frameworks,
 #![test_runner(kernel::tests::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-extern crate boot;
 #[macro_use]
 extern crate kernel;
 
@@ -23,7 +22,6 @@ pub extern "C" fn kernel_main() -> ! {
 
 pub fn main() {
     kernel::init_logger();
-    kernel::init();
 
     println!("Hello From Rust!");
     serial_println!("Hello Qemu!");
