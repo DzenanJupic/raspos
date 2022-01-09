@@ -1,9 +1,12 @@
+use bootloader::BootInfo;
+use x86_64::{PhysAddr, VirtAddr};
 pub use x86_64::instructions::interrupts::{
     are_enabled as interrupts_are_enabled,
     disable as disable_interrupts,
     enable as enable_interrupts,
 };
 use x86_64::instructions::segmentation::Segment;
+use x86_64::structures::paging::OffsetPageTable;
 
 pub use console::Console;
 
@@ -11,8 +14,9 @@ mod boot;
 mod console;
 mod gdt;
 mod idt;
+mod memory;
 
-fn init() {
+fn init(boot_info: &'static BootInfo) {
     // initialize the global descriptor table
     gdt::GDT.0.load();
     unsafe {
@@ -25,6 +29,17 @@ fn init() {
 
     // initialize hardware interrupts (intel PIC8259)
     unsafe { idt::PICS.lock().initialize(); }
+
+    // initialize memory
+    let mut _page_table = unsafe {
+        let physical_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+        let level_4_table = memory::active_level_4_table(physical_mem_offset);
+        OffsetPageTable::new(level_4_table, physical_mem_offset)
+    };
+    let mut _frame_allocator = unsafe {
+        memory::PhysicalMemoryAllocator::new(&boot_info.memory_map)
+    };
+
     x86_64::instructions::interrupts::enable();
 }
 
