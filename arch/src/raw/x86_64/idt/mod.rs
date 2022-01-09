@@ -3,7 +3,7 @@ use x86_64::structures::idt::InterruptDescriptorTable;
 pub use hardware_interrupts::PICS;
 use libcore::lazy::Lazy;
 
-use crate::imp::idt::hardware_interrupts::Interrupt;
+use self::hardware_interrupts::Interrupt;
 
 mod exceptions;
 mod hardware_interrupts;

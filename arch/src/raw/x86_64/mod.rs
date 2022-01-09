@@ -1,5 +1,4 @@
 use bootloader::BootInfo;
-use x86_64::{PhysAddr, VirtAddr};
 pub use x86_64::instructions::interrupts::{
     are_enabled as interrupts_are_enabled,
     disable as disable_interrupts,
@@ -7,6 +6,7 @@ pub use x86_64::instructions::interrupts::{
 };
 use x86_64::instructions::segmentation::Segment;
 use x86_64::structures::paging::OffsetPageTable;
+use x86_64::VirtAddr;
 
 pub use console::Console;
 
@@ -49,6 +49,6 @@ pub fn wait_forever() -> ! {
     }
 }
 
-pub fn shut_down(_: super::ExitCode) {
+pub fn shut_down(_: crate::ExitCode) {
     super::wait_forever();
 }

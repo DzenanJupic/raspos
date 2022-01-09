@@ -9,28 +9,27 @@ extern "C" {
 
 mod compile_time_checks;
 
-#[cfg_attr(target_arch = "aarch64", path = "aarch64/mod.rs")]
-#[cfg_attr(target_arch = "x86_64", path = "x86_64/mod.rs")]
-mod imp;
-
+mod raw;
 #[cfg(feature = "qemu")]
 pub mod qemu;
 
+
+
 #[inline(never)]
 pub fn wait_forever() -> ! {
-    imp::wait_forever()
+    raw::wait_forever()
 }
 
 pub fn enable_interrupts() {
-    imp::enable_interrupts();
+    raw::enable_interrupts();
 }
 
 pub fn disable_interrupts() {
-    imp::disable_interrupts();
+    raw::disable_interrupts();
 }
 
 pub fn interrupts_are_enabled() -> bool {
-    imp::interrupts_are_enabled()
+    raw::interrupts_are_enabled()
 }
 
 pub fn without_interrupts<T, F: FnOnce() -> T>(f: F) -> T {
@@ -53,18 +52,18 @@ pub fn shut_down(exit_code: ExitCode) -> ! {
     #[cfg(feature = "qemu")]
         qemu::shut_down(exit_code);
     #[cfg(not(feature = "qemu"))]
-        imp::shut_down(exit_code);
+        raw::shut_down(exit_code);
     panic!("failed to shut down device");
 }
 
-pub struct Console(imp::Console);
+pub struct Console(raw::Console);
 
 impl Console {
     /// SAFETY:
     ///     This function may only be called once. Creating multiple consoles might lead to
     ///     undefined behaviour.
     pub unsafe fn new() -> Self {
-        Self(imp::Console::new())
+        Self(raw::Console::new())
     }
 }
 
