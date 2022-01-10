@@ -2,7 +2,12 @@
 #![feature(abi_x86_interrupt)]
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
-pub use raw::Allocator;
+pub use raw::{
+    Allocator,
+    disable_interrupts,
+    enable_interrupts,
+    interrupts_are_enabled,
+};
 
 extern "C" {
     /// The entry function into the arch-independent kernel.
@@ -20,18 +25,6 @@ pub mod qemu;
 #[inline(never)]
 pub fn wait_forever() -> ! {
     raw::wait_forever()
-}
-
-pub fn enable_interrupts() {
-    raw::enable_interrupts();
-}
-
-pub fn disable_interrupts() {
-    raw::disable_interrupts();
-}
-
-pub fn interrupts_are_enabled() -> bool {
-    raw::interrupts_are_enabled()
 }
 
 pub fn without_interrupts<T, F: FnOnce() -> T>(f: F) -> T {
