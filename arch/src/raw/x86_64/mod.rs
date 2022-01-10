@@ -8,8 +8,12 @@ use x86_64::instructions::segmentation::Segment;
 use x86_64::structures::paging::OffsetPageTable;
 use x86_64::VirtAddr;
 
-pub use console::Console;
+pub use self::{
+    alloc::Allocator,
+    console::Console,
+};
 
+mod alloc;
 mod boot;
 mod console;
 mod gdt;
@@ -31,13 +35,17 @@ fn init(boot_info: &'static BootInfo) {
     unsafe { idt::PICS.lock().initialize(); }
 
     // initialize memory
-    let mut _page_table = unsafe {
+    let mut page_table = unsafe {
         let physical_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
         let level_4_table = memory::active_level_4_table(physical_mem_offset);
         OffsetPageTable::new(level_4_table, physical_mem_offset)
     };
-    let mut _frame_allocator = unsafe {
+    let mut frame_allocator = unsafe {
         memory::PhysicalMemoryAllocator::new(&boot_info.memory_map)
+    };
+    unsafe {
+        alloc::Allocator::init(&mut page_table, &mut frame_allocator)
+            .expect("failed to initialize the heap")
     };
 
     x86_64::instructions::interrupts::enable();

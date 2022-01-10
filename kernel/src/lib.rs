@@ -1,14 +1,24 @@
 #![no_std]
 #![cfg_attr(test, no_main)]
-#![feature(custom_test_frameworks)]
+#![feature(custom_test_frameworks, alloc_error_handler)]
 #![test_runner(crate::tests::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
+
 pub use logger::init_logger;
+
+#[global_allocator]
+static ALLOCATOR: arch::Allocator = arch::Allocator::new();
 
 #[macro_use]
 pub mod print;
 mod logger;
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
+    panic!("allocation failed: {:?}", layout);
+}
 
 pub mod tests {
     #[cfg(all(test, not(feature = "qemu")))]

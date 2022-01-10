@@ -2,6 +2,8 @@
 #![feature(abi_x86_interrupt)]
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
+pub use raw::Allocator;
+
 extern "C" {
     /// The entry function into the arch-independent kernel.
     fn kernel_main() -> !;
