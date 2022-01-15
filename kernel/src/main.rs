@@ -1,5 +1,5 @@
 #![feature(
-naked_functions, asm, core_intrinsics, panic_info_message, global_asm, asm_sym,
+naked_functions, core_intrinsics, panic_info_message, asm_sym,
 custom_test_frameworks,
 )]
 
