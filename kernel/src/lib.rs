@@ -9,7 +9,7 @@ extern crate alloc;
 pub use logger::init_logger;
 
 #[global_allocator]
-static ALLOCATOR: arch::Allocator = arch::Allocator::new();
+static ALLOCATOR: arch::alloc::AllocatorHandle = arch::alloc::AllocatorHandle::new();
 
 #[macro_use]
 pub mod print;

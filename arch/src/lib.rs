@@ -3,7 +3,6 @@
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
 pub use raw::{
-    Allocator,
     disable_interrupts,
     enable_interrupts,
     interrupts_are_enabled,
@@ -20,6 +19,7 @@ mod raw;
 #[cfg(feature = "qemu")]
 pub mod qemu;
 
+pub mod alloc;
 
 
 #[inline(never)]
