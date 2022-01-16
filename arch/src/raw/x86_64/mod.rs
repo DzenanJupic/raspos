@@ -8,10 +8,7 @@ use x86_64::instructions::segmentation::Segment;
 use x86_64::structures::paging::OffsetPageTable;
 use x86_64::VirtAddr;
 
-pub use self::{
-    alloc::Allocator,
-    console::Console,
-};
+pub use self::console::Console;
 
 mod alloc;
 mod boot;
@@ -44,7 +41,7 @@ fn init(boot_info: &'static BootInfo) {
         memory::PhysicalMemoryAllocator::new(&boot_info.memory_map)
     };
     unsafe {
-        alloc::Allocator::init(&mut page_table, &mut frame_allocator)
+        alloc::init_allocator(&mut page_table, &mut frame_allocator)
             .expect("failed to initialize the heap")
     };
 

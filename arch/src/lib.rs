@@ -1,5 +1,5 @@
 #![no_std]
-#![feature(abi_x86_interrupt)]
+#![feature(abi_x86_interrupt, core_intrinsics, const_mut_refs, alloc_error_handler)]
 #![cfg_attr(feature = "qemu", allow(dead_code))]
 
 pub use raw::{

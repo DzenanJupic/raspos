@@ -8,17 +8,9 @@ extern crate alloc;
 
 pub use logger::init_logger;
 
-#[global_allocator]
-static ALLOCATOR: arch::alloc::AllocatorHandle = arch::alloc::AllocatorHandle::new();
-
 #[macro_use]
 pub mod print;
 mod logger;
-
-#[alloc_error_handler]
-fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
-    panic!("allocation failed: {:?}", layout);
-}
 
 pub mod tests {
     #[cfg(all(test, not(feature = "qemu")))]
