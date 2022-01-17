@@ -5,6 +5,7 @@
 pub use raw::{
     disable_interrupts,
     enable_interrupts,
+    enable_interrupts_and_wait,
     interrupts_are_enabled,
     wait_for_interrupts,
 };

@@ -5,6 +5,7 @@ pub use x86_64::instructions::{
         are_enabled as interrupts_are_enabled,
         disable as disable_interrupts,
         enable as enable_interrupts,
+        enable_and_hlt as enable_interrupts_and_wait,
     },
 };
 use x86_64::instructions::segmentation::Segment;
