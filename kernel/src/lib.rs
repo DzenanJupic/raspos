@@ -6,10 +6,14 @@
 
 extern crate alloc;
 
-pub use logger::init_logger;
+pub use self::{
+    executor::Executor,
+    logger::init_logger,
+};
 
 #[macro_use]
 pub mod print;
+mod executor;
 mod logger;
 
 pub mod tests {
