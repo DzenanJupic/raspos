@@ -6,6 +6,7 @@ pub use raw::{
     disable_interrupts,
     enable_interrupts,
     interrupts_are_enabled,
+    wait_for_interrupts,
 };
 
 pub type KernelMain = unsafe extern "C" fn() -> !;
@@ -29,7 +30,9 @@ pub mod alloc;
 
 #[inline(never)]
 pub fn wait_forever() -> ! {
-    raw::wait_forever()
+    loop {
+        wait_for_interrupts()
+    }
 }
 
 pub fn without_interrupts<T, F: FnOnce() -> T>(f: F) -> T {

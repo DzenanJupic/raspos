@@ -1,8 +1,11 @@
 use bootloader::BootInfo;
-pub use x86_64::instructions::interrupts::{
-    are_enabled as interrupts_are_enabled,
-    disable as disable_interrupts,
-    enable as enable_interrupts,
+pub use x86_64::instructions::{
+    hlt as wait_for_interrupts,
+    interrupts::{
+        are_enabled as interrupts_are_enabled,
+        disable as disable_interrupts,
+        enable as enable_interrupts,
+    },
 };
 use x86_64::instructions::segmentation::Segment;
 use x86_64::structures::paging::OffsetPageTable;
@@ -48,12 +51,6 @@ fn init(boot_info: &'static BootInfo) {
     x86_64::instructions::interrupts::enable();
 }
 
-pub fn wait_forever() -> ! {
-    loop {
-        x86_64::instructions::hlt();
-    }
-}
-
 pub fn shut_down(_: crate::ExitCode) {
-    super::wait_forever();
+    crate::wait_forever();
 }
