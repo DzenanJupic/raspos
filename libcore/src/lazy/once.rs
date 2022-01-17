@@ -71,6 +71,24 @@ impl<T> Once<T> {
         }
     }
 
+    #[inline]
+    pub fn try_set<F: FnOnce() -> T>(&self, f: F) -> Result<&T, ()> {
+        let res = self.state.compare_exchange(
+            INCOMPLETE,
+            RUNNING,
+            Ordering::Acquire,
+            Ordering::Relaxed,
+        );
+
+        match res {
+            Ok(_) => unsafe {
+                self.set_unchecked(f());
+                Ok(self.get_unchecked())
+            }
+            Err(_) => Err(()),
+        }
+    }
+
     /// SAFETY:
     /// The state has to be COMPLETE
     #[inline]
