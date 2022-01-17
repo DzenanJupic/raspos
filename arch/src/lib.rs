@@ -8,9 +8,14 @@ pub use raw::{
     interrupts_are_enabled,
 };
 
+pub type KernelMain = unsafe extern "C" fn() -> !;
+pub type AddKeyboardScanCode = unsafe extern "C" fn(u8);
+
 extern "C" {
     /// The entry function into the arch-independent kernel.
     fn kernel_main() -> !;
+    /// Add a keyboard scan code to the scancode queue
+    fn add_keyboard_scan_code(scancode: u8);
 }
 
 mod compile_time_checks;

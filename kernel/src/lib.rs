@@ -13,6 +13,7 @@ pub use self::{
 
 #[macro_use]
 pub mod print;
+pub mod event_handlers;
 mod executor;
 mod logger;
 
