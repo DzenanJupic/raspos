@@ -26,14 +26,12 @@ pub extern "C" fn kernel_main() -> ! {
 pub fn main() {
     kernel::init_logger();
 
-
-    let mut executor = kernel::Executor::new();
-    executor.spawn(kernel::event_handlers::print_key_presses());
-    executor.run();
-
-
     println!("Hello From Rust!");
     serial_println!("Hello Qemu!");
+
+    kernel::Executor::new()
+        .spawn(kernel::event_handlers::print_key_presses())
+        .run();
 }
 
 #[cfg(not(test))]
